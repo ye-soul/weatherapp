@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&family=Nanum+Gothic:wght@400;700;800&family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+     body{
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            margin: 0px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .app{
+            position: absolute;
+            text-align: center;
+            color: #ffffff;
+            width: 300px;
+            height: 650px;
+        }
+        
+
+        #city{
+            font-size: 20px;
+            margin: 0px;
+            padding: 0px;
+            position: relative;
+            text-align: right;
+            margin-right: -300px;
+            margin-top: 10px;
+        }
+
+        #temp{
+            font-weight: 700;
+            font-size: 78px;
+            margin: 1px;
+            position: relative;
+            text-align: left;
+            top: 220px;
+            margin-left: -300px;
+            line-height: 0.5;
+
+        }
+
+        #weather{
+            font-weight: 700;
+            font-size: 56px;
+            position: relative;
+            text-align: left;
+            top: 210px;
+            margin-left: -300px;
+            line-height: 0.3;
+            letter-spacing: 1px;
+        }
+
+        #air{
+            font-weight: 400;
+            font-size: 16px;
+            position: relative;
+            text-align: left;
+            top: 195px;
+            margin-left: -300px;
+            line-height: 0.2px;
+            letter-spacing: -2px;
+        }
+
+        #time{
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 0.2;
+            position: relative;
+            text-align: left;
+            top: 195px;
+            margin-left: -300px;
+        }
+
+        #weather_des{
+            font-weight: 900;
+            font-size: 40px;
+            position: relative;
+            top: 320px;
+            display: block;
+        }
+
+</style>
+</head>
+<body>
+<div class="app">
+
+        <h3 id="city"></p>
+
+        <h1 id="temp"></h2>
+        <h2 id="weather"></h1>
+        <p id="air"></p>
+        <p id="time"></p>
+
+        <h3 id="weather_des"></h3>
+
+
+</div>
+</body>
+
+
+<script>
+
+$(function(){
+        let url = 'https://api.openweathermap.org/data/2.5/weather?lat=37.5666&lon=126.9&appid=4ed9cbc12270f165c7d92625f6bc8373&units=metric&lang=kr'
+    
+        $.getJSON(url, function(data){
+            console.log(data)
+
+            let city = data.name
+            let weather = data.weather[0].main
+            let weather_des = data.weather[0].description
+            let temp = Math.round(data.main.temp)
+
+            $('#weather').text(weather)
+            $('#weather_des').text(weather_des)
+            $('#temp').text(temp + "˚")
+            $('#city').text(city)
+
+                $('#weather').animate({'margin-left': 20}, 500)
+                $('#time').animate({'margin-left': 23}, 600)
+                $('#air').animate({'margin-left': 23}, 700)
+                $('#temp').animate({'margin-left': 15}, 800)
+
+                $('#city').animate({'margin-right': 20}, 500)
+
+                setInterval(function(){
+                $('#weather_des').animate({'margin-top': -5}, 600)
+                .animate({'margin-top': 0,}, 600)},100)
+
+
+            let dt = data.dt
+            let time = moment(dt * 1000).format('HH:mm')
+
+            $('#time').text(time)
+
+            let id = data.weather[0].id
+
+            if(id>=200&&id<300){
+                $('.app').css('background','linear-gradient(180deg, #626261 0%, #9BA05A 100%)')
+            }
+            else if(id>=300&&id<400){
+                $('.app').css('background','linear-gradient(180deg, #9DB1BB 0%, #8B8C8D 100%)')
+            }
+            else if(id>=500&&id<600){
+                $('.app').css('background','linear-gradient(180deg, #8A9FBE 0%, #5E453F 100%)')
+            }
+            else if(id>=600&&id<700){
+                $('.app').css('background','linear-gradient(180deg, #F1F1F1 0%, #5E6468 100%)')
+            }
+            else if(id>=700&&id<800){
+                $('.app').css('background','linear-gradient(180deg, #B38DD9 0%, #809DAC 100%)')
+            }
+            else if(id==800){
+                $('.app').css('background','linear-gradient(180deg, #9AE4AF 0%, #9DA4BB 100%)')
+            }
+            else if (id>800){
+                $('.app').css('background','linear-gradient(180deg, #C2C2C2 0%, #78C1E9 100%)')
+            } 
+        }) 
+        
+    })   
+
+
+    $(function(){
+        let airpol = 'http://api.openweathermap.org/data/2.5/air_pollution?lat=37.5666&lon=126.9&appid=4ed9cbc12270f165c7d92625f6bc8373'
+    
+        $.getJSON(airpol, function(data){
+            console.log(data)
+
+            let air = data.list[0].main.aqi
+            let dom = $('<div></div>')
+
+                if(air==1){
+                    dom.append('<p>미세먼지 매우좋음</p>')
+                 }
+                else if(air==2){
+                    dom.append('<p>미세먼지 좋음</p>')
+                }
+                else if(air==3){
+                    dom.append('<p>미세먼지 보통</p>')
+                }
+                else if(air==4){
+                    dom.append('<p>미세먼지 나쁨</p>')
+                }
+                else if(air==5){
+                    dom.append('<p>미세먼지 매우나쁨</p>')
+                }
+
+                $('#air').append(dom)
+            })
+        })
+
+        
+
+
+
+</script>
+</html>
